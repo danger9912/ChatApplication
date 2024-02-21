@@ -1,21 +1,37 @@
-import {ChatEngine} from 'react-chat-engine';
-import ChatFeed from './Components/ChatFeed';
+
 import'./App.css';
 import LoginForm from './Components/LoginForm';
+import Login from './Components/Login';
+import Chats from './Components/Chats';
+import Logout from './Components/Logout';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+import { createContext, useEffect, useState } from "react";
 
+export const AppContext = createContext();
 const App=() =>{
-
-  if(!localStorage.getItem('username')) return <LoginForm/>
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState('');
+  // if(!localStorage.getItem('username')) return <Login/>
 
     return(
-      <ChatEngine
-        height="100vh"
-        projectID="8b52ea55-0efc-4911-8b36-ae47ff286446"
-        userName={localStorage.getItem('username')}
-        userSecret={localStorage.getItem('password')}
-        renderChatFeed ={(chatAppProps)=><ChatFeed {...chatAppProps}></ChatFeed>}
-      />
-       
+      <>
+     
+     <AppContext.Provider value={{ isLoggedIn, setIsLoggedIn , user , setUser }}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<LoginForm />} />
+            <Route path="/chat" element={localStorage.getItem("username") ?<Chats /> : <LoginForm></LoginForm>} />
+            <Route path="/logout" element={<Logout />} />
+
+           
+          </Routes>
+        </Router>
+        </AppContext.Provider>
+      </>
     );
 }
 export default App;

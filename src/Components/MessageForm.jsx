@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { sendMessage,isTyping } from 'react-chat-engine'
-import { SendOutlined,PictureOutlined } from '@ant-design/icons'
+import { SendOutlined,PictureOutlined,LogoutOutlined } from '@ant-design/icons'
+import Swal from 'sweetalert2';
 const MessageForm = (props) => {
     const [value,setvalue] =useState('');
     const {chatId ,creds} =props
@@ -17,6 +18,17 @@ const MessageForm = (props) => {
     const handleUpload=(event)=>{
         sendMessage(creds,chatId,{files:event.target.files,text:""})
     }
+    const handleLogout =()=>{
+       
+            localStorage.clear();
+            Swal.fire({
+              title: "Logout successfully",
+              icon: "success" 
+            }).then(() => {
+              window.location.href = "/";
+            });
+        
+    }
   return (
     <form className='message-form' onSubmit={handleSubmit}>
         <input className='message-input'
@@ -24,6 +36,7 @@ const MessageForm = (props) => {
                 value={value}
                 onChange={handleChange}
                 onSubmit={handleSubmit}
+                // style={{marginRight:0}}
          />
     <label htmlFor='upload-button'>
         <span className='image-button'>
@@ -36,9 +49,14 @@ const MessageForm = (props) => {
             style={{display:"none"}}
             onChange={handleUpload}
     />
-    <button type='submit' className='send-button'>
+    <button type='submit' className='send-button' >
         <SendOutlined className='send-icon'/>
         </button>
+        <button  className='send-button' onClick={handleLogout}style={{marginLeft:"580px"}}>
+        <LogoutOutlined   className='send-icon'/>
+        </button>
+        
+
     </form>
   )
 }
